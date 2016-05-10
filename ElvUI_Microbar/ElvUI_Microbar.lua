@@ -110,7 +110,7 @@ function AB:MicroScale()
 	--ElvUI_MicroBar.mover:SetWidth(AB.MicroWidth*AB.db.microbar.scale)
 	--ElvUI_MicroBar.mover:SetHeight(AB.MicroHeight*AB.db.microbar.scale);
 	ElvUI_MicroBar:SetScale(AB.db.microbar.scale)
-	microbarS:SetScale(AB.db.microbar.scale)
+	ElvUI_MicroBarS:SetScale(AB.db.microbar.scale)
 end
 
 E.UpdateAllMB = E.UpdateAll
@@ -122,18 +122,18 @@ end
 
 local function Letter_OnEnter()
 	if(AB.db.microbar.mouseover) then
-		E:UIFrameFadeIn(microbarS, 0.2, microbarS:GetAlpha(), AB.db.microbar.alpha);
+		E:UIFrameFadeIn(ElvUI_MicroBarS, 0.2, ElvUI_MicroBarS:GetAlpha(), AB.db.microbar.alpha);
 	end
 end
 
 local function Letter_OnLeave()
 	if(AB.db.microbar.mouseover) then
-		E:UIFrameFadeOut(microbarS, 0.2, microbarS:GetAlpha(), 0);
+		E:UIFrameFadeOut(ElvUI_MicroBarS, 0.2, ElvUI_MicroBarS:GetAlpha(), 0);
 	end
 end
 
 function AB:CreateSymbolButton(name, text, tooltip, click)
-	local button = CreateFrame("Button", name, microbarS);
+	local button = CreateFrame("Button", name, ElvUI_MicroBarS);
 	button:SetScript("OnClick", click);
 	if(tooltip) then
 		button:SetScript("OnEnter", function(self)
@@ -173,10 +173,10 @@ function AB:SetSymbloColor()
 end
 
 function AB:SetupSymbolBar()
-	microbarS = CreateFrame("Frame", "ElvUI_MicroBarS", E.UIParent);
-	microbarS:SetPoint("CENTER", ElvUI_MicroBar, 0, 0);
-	microbarS:SetScript("OnEnter", Letter_OnEnter);
-	microbarS:SetScript("OnLeave", Letter_OnLeave);
+	local frame = CreateFrame("Frame", "ElvUI_MicroBarS", E.UIParent);
+	frame:SetPoint("CENTER", ElvUI_MicroBar, 0, 0);
+	frame:SetScript("OnEnter", Letter_OnEnter);
+	frame:SetScript("OnLeave", Letter_OnLeave);
 
 	AB:CreateSymbolButton("EMB_Character", "C", CHARACTER_BUTTON, function() 
 		if(CharacterFrame:IsShown()) then
@@ -271,45 +271,45 @@ function AB:UpdateMicroPositionDimensions()
 	if(not Sbuttons[1]) then return; end
 	AB:MenuShow();
 	local numRowsS = 1;
-	for i=1, #Sbuttons do
+	for i=1, #MICRO_BUTTONS do
 		local button = Sbuttons[i];
 		local prevButton = Sbuttons[i-1] or ElvUI_MicroBarS;
 		local lastColumnButton = Sbuttons[i-self.db.microbar.buttonsPerRow];
-		button:Width(28)
+		button:Width(28 - 4)
 		button:Height(58 - 28);
 
 		button:ClearAllPoints();
-		if(prevButtonS == ElvUI_MicroBarS) then
-			button:SetPoint("TOPLEFT", prevButtonS, "TOPLEFT", 0, 0);
+		if(prevButton == ElvUI_MicroBarS) then
+			button:SetPoint("TOPLEFT", prevButton, "TOPLEFT", 0, 0);
 		elseif((i - 1) % self.db.microbar.buttonsPerRow == 0) then
 			button:Point("TOP", lastColumnButton, "BOTTOM", 0, -self.db.microbar.yOffset);	
 			numRowsS = numRowsS + 1;
 		else
-			button:Point("LEFT", prevButtonS, "RIGHT", self.db.microbar.xOffset, 0);
+			button:Point("LEFT", prevButton, "RIGHT", self.db.microbar.xOffset, 0);
 		end
 
-		prevButtonS = button;
+		prevButton = button;
 	end
 
-	microbarS:SetWidth(((CharacterMicroButton:GetWidth()) * (#MICRO_BUTTONS - 1) - 3) / numRowsS);
-	microbarS:SetHeight((CharacterMicroButton:GetHeight() - 27) * numRowsS);
+	ElvUI_MicroBarS:SetWidth(((CharacterMicroButton:GetWidth()) * (#Sbuttons - 1) - 3) / numRowsS);
+	ElvUI_MicroBarS:SetHeight((CharacterMicroButton:GetHeight() - 27) * numRowsS);
 
-	if not microbarS.backdrop then
-		microbarS:CreateBackdrop("Transparent")
+	if not ElvUI_MicroBarS.backdrop then
+		ElvUI_MicroBarS:CreateBackdrop("Transparent")
 	end
 	
 	if AB.db.microbar.backdrop then
 		ElvUI_MicroBar.backdrop:Show()
-		microbarS.backdrop:Show()
+		ElvUI_MicroBarS.backdrop:Show()
 	else
 		ElvUI_MicroBar.backdrop:Hide()
-		microbarS.backdrop:Hide()
+		ElvUI_MicroBarS.backdrop:Hide()
 	end
 	
 	if AB.db.microbar.mouseover then
-		microbarS:SetAlpha(0)
+		ElvUI_MicroBarS:SetAlpha(0)
 	elseif not AB.db.microbar.mouseover and  AB.db.microbar.symbolic then
-		microbarS:SetAlpha(AB.db.microbar.alpha)
+		ElvUI_MicroBarS:SetAlpha(AB.db.microbar.alpha)
 	end
 	
 	AB:MicroScale()
@@ -320,18 +320,18 @@ function AB:MenuShow()
 	if AB.db.microbar.symbolic then
 		if AB.db.microbar.enabled then
 			ElvUI_MicroBar:Hide()
-			microbarS:Show()
+			ElvUI_MicroBarS:Show()
 			if not AB.db.microbar.mouseover then
-				E:UIFrameFadeIn(microbarS, 0.2, microbarS:GetAlpha(), AB.db.microbar.alpha)
+				E:UIFrameFadeIn(ElvUI_MicroBarS, 0.2, ElvUI_MicroBarS:GetAlpha(), AB.db.microbar.alpha)
 			end
 		else
-			microbarS:Hide()
+			ElvUI_MicroBarS:Hide()
 		end
 	else
 		if AB.db.microbar.enabled then
 			ElvUI_MicroBar:Show()
 		end
-		microbarS:Hide()
+		ElvUI_MicroBarS:Hide()
 	end
 end
 
@@ -347,7 +347,7 @@ function AB:EnhancementInit()
 	AB:MenuShow()
 	
 	hooksecurefunc("UpdateMicroButtons", function()
-		AB:UpdateMicroPositionDimensions()
+	--	AB:UpdateMicroPositionDimensions()
 	end)
 	-- if not IsAddOnLoaded("ElvUI_SLE") then return end
 	-- UB = E:GetModule("SLE_UIButtons");
