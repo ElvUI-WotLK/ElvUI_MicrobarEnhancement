@@ -43,74 +43,67 @@ local MICRO_BUTTONS = {
 	"HelpMicroButton"
 };
 
-local bw, bh = E.PixelMode and 23 or 21, E.PixelMode and 30 or 28
-
 local Sbuttons = {}
-local ColorTable
 
---Options
 function AB:GetOptions()
-E.Options.args.actionbar.args.microbar.args.scale = {
-	order = 5,
-	type = "range",
-	name = L["Set Scale"],
-	desc = L["Sets Scale of the Micro Bar"],
-	isPercent = true,
-	min = 0.3, max = 2, step = 0.01,
-	get = function(info) return AB.db.microbar.scale end,
-	set = function(info, value) AB.db.microbar.scale = value; AB:UpdateMicroPositionDimensions() end,
-}
-E.Options.args.actionbar.args.microbar.args.backdrop = {
-	order = 7,
-	type = "toggle",
-	name = L["Backdrop"],
-	disabled = function() return not AB.db.microbar.enabled end,
-	get = function(info) return AB.db.microbar.backdrop end,
-	set = function(info, value) AB.db.microbar.backdrop = value; AB:UpdateMicroPositionDimensions() end,
-}
-E.Options.args.actionbar.args.microbar.args.symbolic = {
-	order = 8,
-	type = "toggle",
-	name = L["As Letters"],
-	desc = L["Replace icons with just letters.\n|cffFF0000Warning:|r this will disable original Blizzard's tooltips for microbar."],
-	disabled = function() return not AB.db.microbar.enabled end,
-	get = function(info) return AB.db.microbar.symbolic end,
-	set = function(info, value) AB.db.microbar.symbolic = value; AB:MenuShow(); end,
-}
-E.Options.args.actionbar.args.microbar.args.color = {
-	order = 9,
-	type = "color",
-	name = L["Text Color"],
-	get = function(info)
-		local t = AB.db.microbar.colorS
-		local d = P.actionbar.microbar.colorS
-		return t.r, t.g, t.b, d.r, d.g, d.b
-	end,
-	set = function(info, r, g, b)
-		E.db.sle.minimap.instance.colorS = {}
-		local t = AB.db.microbar.colorS
-		t.r, t.g, t.b = r, g, b
-		AB:SetSymbloColor()
-	end,
-	disabled = function() return not AB.db.microbar.enabled or AB.db.microbar.classColor end,
-}
-E.Options.args.actionbar.args.microbar.args.classColor = {
-	order = 10,
-	type = "toggle",
-	name = CLASS,
-	disabled = function() return not AB.db.microbar.enabled end,
-	get = function(info) return AB.db.microbar.classColor end,
-	set = function(info, value) AB.db.microbar.classColor = value; AB:SetSymbloColor() end,
-}
+	E.Options.args.actionbar.args.microbar.args.scale = {
+		order = 5,
+		type = "range",
+		name = L["Set Scale"],
+		desc = L["Sets Scale of the Micro Bar"],
+		isPercent = true,
+		min = 0.3, max = 2, step = 0.01,
+		get = function(info) return AB.db.microbar.scale end,
+		set = function(info, value) AB.db.microbar.scale = value; AB:UpdateMicroPositionDimensions(); end
+	};
+	E.Options.args.actionbar.args.microbar.args.backdrop = {
+		order = 6,
+		type = "toggle",
+		name = L["Backdrop"],
+		disabled = function() return not AB.db.microbar.enabled end,
+		get = function(info) return AB.db.microbar.backdrop end,
+		set = function(info, value) AB.db.microbar.backdrop = value; AB:UpdateMicroPositionDimensions(); end
+	};
+	E.Options.args.actionbar.args.microbar.args.symbolic = {
+		order = 7,
+		type = "toggle",
+		name = L["As Letters"],
+		desc = L["Replace icons with just letters.\n|cffFF0000Warning:|r this will disable original Blizzard's tooltips for microbar."],
+		disabled = function() return not AB.db.microbar.enabled end,
+		get = function(info) return AB.db.microbar.symbolic end,
+		set = function(info, value) AB.db.microbar.symbolic = value; AB:MenuShow(); end
+	};
+	E.Options.args.actionbar.args.microbar.args.color = {
+		order = 8,
+		type = "color",
+		name = L["Text Color"],
+		get = function(info)
+			local t = AB.db.microbar.colorS;
+			local d = P.actionbar.microbar.colorS;
+			return t.r, t.g, t.b, d.r, d.g, d.b;
+		end,
+		set = function(info, r, g, b)
+			local t = AB.db.microbar.colorS;
+			t.r, t.g, t.b = r, g, b;
+			AB:SetSymbloColor();
+		end,
+		disabled = function() return not AB.db.microbar.enabled or AB.db.microbar.classColor; end
+	};
+	E.Options.args.actionbar.args.microbar.args.classColor = {
+		order = 9,
+		type = "toggle",
+		name = CLASS,
+		disabled = function() return not AB.db.microbar.enabled; end,
+		get = function(info) return AB.db.microbar.classColor; end,
+		set = function(info, value) AB.db.microbar.classColor = value; AB:SetSymbloColor(); end
+	};
 end
 
---Set Scale
 function AB:MicroScale()
-	local height = floor(12/AB.db.microbar.buttonsPerRow)
-	--ElvUI_MicroBar.mover:SetWidth(AB.MicroWidth*AB.db.microbar.scale)
-	--ElvUI_MicroBar.mover:SetHeight(AB.MicroHeight*AB.db.microbar.scale);
-	ElvUI_MicroBar:SetScale(AB.db.microbar.scale)
-	ElvUI_MicroBarS:SetScale(AB.db.microbar.scale)
+	ElvUI_MicroBar.mover:SetWidth(AB.MicroWidth*AB.db.microbar.scale);
+	ElvUI_MicroBar.mover:SetHeight(AB.MicroHeight*AB.db.microbar.scale);
+	ElvUI_MicroBar:SetScale(AB.db.microbar.scale);
+	ElvUI_MicroBarS:SetScale(AB.db.microbar.scale);
 end
 
 E.UpdateAllMB = E.UpdateAll
@@ -166,7 +159,7 @@ function AB:CreateSymbolButton(name, text, tooltip, click)
 end
 
 function AB:SetSymbloColor()
-	local color = AB.db.microbar.classColor and ColorTable or AB.db.microbar.colorS;
+	local color = AB.db.microbar.classColor and (E.myclass == "PRIEST" and E.PriestColors or (CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[E.myclass] or RAID_CLASS_COLORS[E.myclass])) or AB.db.microbar.colorS;
 	for i = 1, #Sbuttons do
 		Sbuttons[i].text:SetTextColor(color.r, color.g, color.b);
 	end
@@ -240,7 +233,7 @@ function AB:UpdateMicroPositionDimensions()
 
 		button:ClearAllPoints();
 		if(prevButton == ElvUI_MicroBar) then
-			button:SetPoint("TOPLEFT", prevButton, "TOPLEFT", -2, 28);
+			button:SetPoint("TOPLEFT", prevButton, "TOPLEFT", -2 + E.Border, 28 - E.Border);
 		elseif((i - 1) % self.db.microbar.buttonsPerRow == 0) then
 			button:Point("TOP", lastColumnButton, "BOTTOM", 0, 28 - self.db.microbar.yOffset);	
 			numRows = numRows + 1;
@@ -254,10 +247,13 @@ function AB:UpdateMicroPositionDimensions()
 	else
 		ElvUI_MicroBar:SetAlpha(self.db.microbar.alpha);
 	end
-	
-	ElvUI_MicroBar:SetWidth(((CharacterMicroButton:GetWidth()) * (#MICRO_BUTTONS - 1) - 3) / numRows);
-	ElvUI_MicroBar:SetHeight((CharacterMicroButton:GetHeight() - 27) * numRows);
-	
+
+	AB.MicroWidth = ((CharacterMicroButton:GetWidth() - 4) * self.db.microbar.buttonsPerRow) + (self.db.microbar.xOffset * (self.db.microbar.buttonsPerRow-1)) + E.Border*2;
+	AB.MicroHeight = ((CharacterMicroButton:GetHeight() - 28) * numRows) + (self.db.microbar.yOffset * (numRows-1)) + E.Border*2;
+
+	ElvUI_MicroBar:SetWidth(AB.MicroWidth);
+	ElvUI_MicroBar:SetHeight(AB.MicroHeight);
+
 	if(not ElvUI_MicroBar.backdrop) then
 		ElvUI_MicroBar:CreateBackdrop("Transparent");
 	end
@@ -266,7 +262,7 @@ function AB:UpdateMicroPositionDimensions()
 		ElvUI_MicroBar:Show();
 	else
 		ElvUI_MicroBar:Hide();
-	end		
+	end
 
 	if(not Sbuttons[1]) then return; end
 	AB:MenuShow();
@@ -280,7 +276,7 @@ function AB:UpdateMicroPositionDimensions()
 
 		button:ClearAllPoints();
 		if(prevButton == ElvUI_MicroBarS) then
-			button:SetPoint("TOPLEFT", prevButton, "TOPLEFT", 0, 0);
+			button:SetPoint("TOPLEFT", prevButton, "TOPLEFT", E.Border, -E.Border);
 		elseif((i - 1) % self.db.microbar.buttonsPerRow == 0) then
 			button:Point("TOP", lastColumnButton, "BOTTOM", 0, -self.db.microbar.yOffset);	
 			numRowsS = numRowsS + 1;
@@ -291,29 +287,29 @@ function AB:UpdateMicroPositionDimensions()
 		prevButton = button;
 	end
 
-	ElvUI_MicroBarS:SetWidth(((CharacterMicroButton:GetWidth()) * (#Sbuttons - 1) - 3) / numRowsS);
-	ElvUI_MicroBarS:SetHeight((CharacterMicroButton:GetHeight() - 27) * numRowsS);
+	ElvUI_MicroBarS:SetWidth(AB.MicroWidth);
+	ElvUI_MicroBarS:SetHeight(AB.MicroHeight);
 
-	if not ElvUI_MicroBarS.backdrop then
-		ElvUI_MicroBarS:CreateBackdrop("Transparent")
+	if(not ElvUI_MicroBarS.backdrop) then
+		ElvUI_MicroBarS:CreateBackdrop("Transparent");
 	end
-	
-	if AB.db.microbar.backdrop then
-		ElvUI_MicroBar.backdrop:Show()
-		ElvUI_MicroBarS.backdrop:Show()
+
+	if(AB.db.microbar.backdrop) then
+		ElvUI_MicroBar.backdrop:Show();
+		ElvUI_MicroBarS.backdrop:Show();
 	else
-		ElvUI_MicroBar.backdrop:Hide()
-		ElvUI_MicroBarS.backdrop:Hide()
+		ElvUI_MicroBar.backdrop:Hide();
+		ElvUI_MicroBarS.backdrop:Hide();
 	end
-	
-	if AB.db.microbar.mouseover then
-		ElvUI_MicroBarS:SetAlpha(0)
-	elseif not AB.db.microbar.mouseover and  AB.db.microbar.symbolic then
-		ElvUI_MicroBarS:SetAlpha(AB.db.microbar.alpha)
+
+	if(AB.db.microbar.mouseover) then
+		ElvUI_MicroBarS:SetAlpha(0);
+	elseif(not AB.db.microbar.mouseover and  AB.db.microbar.symbolic) then
+		ElvUI_MicroBarS:SetAlpha(AB.db.microbar.alpha);
 	end
-	
-	AB:MicroScale()
-	AB:SetSymbloColor()
+
+	AB:MicroScale();
+	AB:SetSymbloColor();
 end
 
 function AB:MenuShow()
@@ -340,7 +336,6 @@ end
 -- end
 
 function AB:EnhancementInit()
-	ColorTable = E.myclass == "PRIEST" and E.PriestColors or RAID_CLASS_COLORS[E.myclass]
 	EP:RegisterPlugin(addon,AB.GetOptions)
 	AB:SetupSymbolBar()
 	AB:MicroScale()
