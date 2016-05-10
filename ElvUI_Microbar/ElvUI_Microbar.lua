@@ -168,6 +168,7 @@ end
 function AB:SetupSymbolBar()
 	local frame = CreateFrame("Frame", "ElvUI_MicroBarS", E.UIParent);
 	frame:SetPoint("CENTER", ElvUI_MicroBar, 0, 0);
+	frame:EnableMouse(true);
 	frame:SetScript("OnEnter", Letter_OnEnter);
 	frame:SetScript("OnLeave", Letter_OnLeave);
 
@@ -336,14 +337,11 @@ end
 -- end
 
 function AB:EnhancementInit()
-	EP:RegisterPlugin(addon,AB.GetOptions)
-	AB:SetupSymbolBar()
-	AB:MicroScale()
-	AB:MenuShow()
-	
-	hooksecurefunc("UpdateMicroButtons", function()
-	--	AB:UpdateMicroPositionDimensions()
-	end)
+	EP:RegisterPlugin(addon, AB.GetOptions);
+	AB:SetupSymbolBar();
+	AB:MicroScale();
+	AB:MenuShow();
+
 	-- if not IsAddOnLoaded("ElvUI_SLE") then return end
 	-- UB = E:GetModule("SLE_UIButtons");
 	-- hooksecurefunc(UB, "InsertButtons", AB.CreateUIButton)
