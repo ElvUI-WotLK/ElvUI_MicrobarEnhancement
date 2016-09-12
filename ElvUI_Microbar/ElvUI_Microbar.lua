@@ -209,8 +209,8 @@ function AB:SetupSymbolBar()
 		end
 	end);
 	AB:CreateSymbolButton("EMB_Socials", "F", SOCIAL_BUTTON, function() ToggleFriendsFrame(); end);
-	AB:CreateSymbolButton("EMB_PVP", "L", PLAYER_V_PLAYER, function() TogglePVPFrame(); end)
-	AB:CreateSymbolButton("EMB_LFD", "J", DUNGEONS_BUTTON, function() ToggleLFDParentFrame(); end);
+	AB:CreateSymbolButton("EMB_PVP", "P", PLAYER_V_PLAYER, function() TogglePVPFrame(); end)
+	AB:CreateSymbolButton("EMB_LFD", "D", DUNGEONS_BUTTON, function() ToggleLFDParentFrame(); end);
 	AB:CreateSymbolButton("EMB_MenuSys", "M", MAINMENU_BUTTON, function()
 		if(GameMenuFrame:IsShown()) then
 			HideUIPanel(GameMenuFrame);
@@ -268,7 +268,7 @@ function AB:UpdateMicroPositionDimensions()
 	if(not Sbuttons[1]) then return; end
 	AB:MenuShow();
 	local numRowsS = 1;
-	for i=1, #MICRO_BUTTONS do
+	for i=1, #Sbuttons do
 		local button = Sbuttons[i];
 		local prevButton = Sbuttons[i-1] or ElvUI_MicroBarS;
 		local lastColumnButton = Sbuttons[i-self.db.microbar.buttonsPerRow];
@@ -348,3 +348,10 @@ function AB:EnhancementInit()
 end
 
 hooksecurefunc(AB, "Initialize", AB.EnhancementInit)
+
+local f = CreateFrame("Frame");
+f:RegisterEvent("PLAYER_ENTERING_WORLD");
+f:SetScript("OnEvent", function(self)
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+	AB:MicroScale();
+end);
