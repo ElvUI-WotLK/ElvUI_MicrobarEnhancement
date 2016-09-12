@@ -172,21 +172,21 @@ function AB:SetupSymbolBar()
 	frame:SetScript("OnEnter", Letter_OnEnter);
 	frame:SetScript("OnLeave", Letter_OnLeave);
 
-	AB:CreateSymbolButton("EMB_Character", "C", CHARACTER_BUTTON, function() 
+	AB:CreateSymbolButton("EMB_Character", "C", MicroButtonTooltipText(CHARACTER_INFO, "TOGGLECHARACTER0"), function() 
 		if(CharacterFrame:IsShown()) then
 			HideUIPanel(CharacterFrame);
 		else
 			ShowUIPanel(CharacterFrame);
 		end
 	end);
-	AB:CreateSymbolButton("EMB_Spellbook", "S", SPELLBOOK_ABILITIES_BUTTON, function() 
+	AB:CreateSymbolButton("EMB_Spellbook", "S", MicroButtonTooltipText(SPELLBOOK_ABILITIES_BUTTON, "TOGGLESPELLBOOK"), function() 
 		if(SpellBookFrame:IsShown()) then
 			HideUIPanel(SpellBookFrame);
 		else
 			ShowUIPanel(SpellBookFrame);
 		end
 	end);
-	AB:CreateSymbolButton("EMB_Talents", "T", TALENTS_BUTTON, function()
+	AB:CreateSymbolButton("EMB_Talents", "T", MicroButtonTooltipText(TALENTS_BUTTON, "TOGGLETALENTS"), function()
 		if(UnitLevel("player") >= 10) then
 			if(PlayerTalentFrame) then
 				if(PlayerTalentFrame:IsShown()) then
@@ -200,18 +200,18 @@ function AB:SetupSymbolBar()
 			end
 		end
 	end)
-	AB:CreateSymbolButton("EMB_Achievement", "A", ACHIEVEMENT_BUTTON, function() ToggleAchievementFrame(); end);
-	AB:CreateSymbolButton("EMB_Quest", "Q", QUESTLOG_BUTTON, function()
+	AB:CreateSymbolButton("EMB_Achievement", "A", MicroButtonTooltipText(ACHIEVEMENT_BUTTON, "TOGGLEACHIEVEMENT"), function() ToggleAchievementFrame(); end);
+	AB:CreateSymbolButton("EMB_Quest", "Q", MicroButtonTooltipText(QUESTLOG_BUTTON, "TOGGLEQUESTLOG"), function()
 		if(QuestLogFrame:IsShown()) then
 			HideUIPanel(QuestLogFrame);
 		else
 			ShowUIPanel(QuestLogFrame);
 		end
 	end);
-	AB:CreateSymbolButton("EMB_Socials", "F", SOCIAL_BUTTON, function() ToggleFriendsFrame(); end);
-	AB:CreateSymbolButton("EMB_PVP", "P", PLAYER_V_PLAYER, function() TogglePVPFrame(); end)
-	AB:CreateSymbolButton("EMB_LFD", "D", DUNGEONS_BUTTON, function() ToggleLFDParentFrame(); end);
-	AB:CreateSymbolButton("EMB_MenuSys", "M", MAINMENU_BUTTON, function()
+	AB:CreateSymbolButton("EMB_Socials", "F", MicroButtonTooltipText(SOCIAL_BUTTON, "TOGGLESOCIAL"), function() ToggleFriendsFrame(); end);
+	AB:CreateSymbolButton("EMB_PVP", "P", MicroButtonTooltipText(PLAYER_V_PLAYER, "TOGGLECHARACTER4"), function() TogglePVPFrame(); end)
+	AB:CreateSymbolButton("EMB_LFD", "D", MicroButtonTooltipText(DUNGEONS_BUTTON, "TOGGLELFGPARENT"), function() ToggleLFDParentFrame(); end);
+	AB:CreateSymbolButton("EMB_MenuSys", "M", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function()
 		if(GameMenuFrame:IsShown()) then
 			HideUIPanel(GameMenuFrame);
 		else
