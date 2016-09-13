@@ -339,7 +339,6 @@ end
 function AB:EnhancementInit()
 	EP:RegisterPlugin(addon, AB.GetOptions);
 	AB:SetupSymbolBar();
-	AB:MicroScale();
 	AB:MenuShow();
 
 	-- if not IsAddOnLoaded("ElvUI_SLE") then return end
@@ -347,7 +346,7 @@ function AB:EnhancementInit()
 	-- hooksecurefunc(UB, "InsertButtons", AB.CreateUIButton)
 end
 
-hooksecurefunc(AB, "Initialize", AB.EnhancementInit)
+hooksecurefunc(AB, "SetupMicroBar", AB.EnhancementInit)
 
 local f = CreateFrame("Frame");
 f:RegisterEvent("PLAYER_ENTERING_WORLD");
