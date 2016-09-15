@@ -213,8 +213,10 @@ function AB:SetupSymbolBar()
 	AB:CreateSymbolButton("EMB_LFD", "D", MicroButtonTooltipText(DUNGEONS_BUTTON, "TOGGLELFGPARENT"), function() ToggleLFDParentFrame(); end);
 	AB:CreateSymbolButton("EMB_MenuSys", "M", MicroButtonTooltipText(MAINMENU_BUTTON, "TOGGLEGAMEMENU"), function()
 		if(GameMenuFrame:IsShown()) then
+			PlaySound("igMainMenuQuit");
 			HideUIPanel(GameMenuFrame);
 		else
+			PlaySound("igMainMenuOpen");
 			ShowUIPanel(GameMenuFrame);
 		end
 	end);
