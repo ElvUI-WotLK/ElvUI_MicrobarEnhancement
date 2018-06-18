@@ -359,8 +359,8 @@ function AB:UpdateMicroPositionDimensions()
 end
 
 function AB:MenuShow()
-	if AB.db.microbar.symbolic then
-		if AB.db.microbar.enabled then
+	if AB.db.microbar.enabled then
+		if AB.db.microbar.symbolic then
 			ElvUI_MicroBar:Hide()
 			ElvUI_MicroBarS:Show()
 			if not AB.db.microbar.mouseover then
@@ -368,12 +368,14 @@ function AB:MenuShow()
 			end
 		else
 			ElvUI_MicroBarS:Hide()
-		end
-	else
-		if AB.db.microbar.enabled then
 			ElvUI_MicroBar:Show()
 		end
-		ElvUI_MicroBarS:Hide()
+	else
+		if AB.db.microbar.symbolic then
+			ElvUI_MicroBarS:Hide()
+		else
+			ElvUI_MicroBar:Hide()
+		end
 	end
 end
 
