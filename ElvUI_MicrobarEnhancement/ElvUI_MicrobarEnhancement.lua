@@ -287,11 +287,11 @@ function AB:UpdateMicroPositionDimensions()
 	ElvUI_MicroBar:Size(AB.MicroWidth, AB.MicroHeight)
 
 	if not ElvUI_MicroBar.backdrop then
-		ElvUI_MicroBar:CreateBackdrop("Transparent")
+		ElvUI_MicroBar:CreateBackdrop()
 	end
 
 	local style = self.db.microbar.transparentBackdrop and "Transparent" or "Default"
-	if ElvUI_MicroBar then
+	if ElvUI_MicroBar.backdrop then
 		ElvUI_MicroBar.backdrop:SetTemplate(style)
 		ElvUI_MicroBar.backdrop:Point("BOTTOMLEFT", 0, 1)
 	end
@@ -333,10 +333,10 @@ function AB:UpdateMicroPositionDimensions()
 	ElvUI_MicroBarS:Size(AB.MicroWidth, AB.MicroHeight)
 
 	if not ElvUI_MicroBarS.backdrop then
-		ElvUI_MicroBarS:CreateBackdrop("Transparent")
+		ElvUI_MicroBarS:CreateBackdrop()
 	end
 
-	if ElvUI_MicroBar then
+	if ElvUI_MicroBarS.backdrop then
 		ElvUI_MicroBarS.backdrop:SetTemplate(style)
 		ElvUI_MicroBarS.backdrop:Point("BOTTOMLEFT", 0, 1)
 	end
