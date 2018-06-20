@@ -281,7 +281,7 @@ function AB:UpdateMicroPositionDimensions()
 		prevButton = button
 	end
 
-	if AB.db.microbar.mouseover and not ElvUI_MicroBar:IsMouseOver() then
+	if self.db.microbar.mouseover and not ElvUI_MicroBar:IsMouseOver() then
 		ElvUI_MicroBar:SetAlpha(0)
 	else
 		ElvUI_MicroBar:SetAlpha(self.db.microbar.alpha)
@@ -299,7 +299,7 @@ function AB:UpdateMicroPositionDimensions()
 	ElvUI_MicroBar.backdrop:SetTemplate(style)
 	ElvUI_MicroBar.backdrop:Point("BOTTOMLEFT", 0, 1)
 
-	if AB.db.microbar.backdrop then
+	if self.db.microbar.backdrop then
 		ElvUI_MicroBar.backdrop:Show()
 	else
 		ElvUI_MicroBar.backdrop:Hide()
@@ -353,16 +353,16 @@ function AB:UpdateMicroPositionDimensions()
 	ElvUI_MicroBarS.backdrop:SetTemplate(style)
 	ElvUI_MicroBarS.backdrop:Point("BOTTOMLEFT", 0, 1)
 
-	if AB.db.microbar.backdrop then
+	if self.db.microbar.backdrop then
 		ElvUI_MicroBarS.backdrop:Show()
 	else
 		ElvUI_MicroBarS.backdrop:Hide()
 	end
 
-	if AB.db.microbar.mouseover and not ElvUI_MicroBar:IsMouseOver() then
+	if self.db.microbar.mouseover and not ElvUI_MicroBarS:IsMouseOver() then
 		ElvUI_MicroBarS:SetAlpha(0)
-	elseif not (AB.db.microbar.mouseover and ElvUI_MicroBar:IsMouseOver()) and AB.db.microbar.symbolic then
-		ElvUI_MicroBarS:SetAlpha(AB.db.microbar.alpha)
+	else
+		ElvUI_MicroBarS:SetAlpha(self.db.microbar.alpha)
 	end
 
 	RegisterStateDriver(ElvUI_MicroBarS, "visibility", (self.db.microbar.enabled and self.db.microbar.symbolic and visibility) or "hide")
@@ -373,6 +373,10 @@ end
 function AB:EnhancementInit()
 	EP:RegisterPlugin(addon, AB.GetOptions)
 	AB:SetupSymbolBar()
+
+	-- Prevent Taints
+	ToggleFrame(_G["CharacterFrame"])
+	ToggleFrame(_G["SpellBookFrame"])
 
 	_G["EMB_MenuSys"]:SetScript("OnUpdate", function(self, elapsed)
 		if self.updateInterval > 0 then
