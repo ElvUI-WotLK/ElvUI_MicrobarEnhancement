@@ -67,7 +67,7 @@ function AB:GetOptions()
 				desc = L["Replace icons with letters"],
 				disabled = function() return not AB.db.microbar.enabled end,
 				get = function(info) return AB.db.microbar.symbolic end,
-				set = function(info, value) AB.db.microbar.symbolic = value AB:MenuShow() end
+				set = function(info, value) AB.db.microbar.symbolic = value AB:UpdateMicroPositionDimensions() end
 			},
 			classColor = {
 				order = 5,
@@ -138,7 +138,6 @@ local Sbuttons = {}
 E.UpdateAllMB = E.UpdateAll
 function E:UpdateAll()
     E.UpdateAllMB(self)
-	AB:MenuShow()
 end
 
 local function onEnter()
@@ -252,6 +251,12 @@ end
 function AB:UpdateMicroPositionDimensions()
 	if not ElvUI_MicroBar then return end
 
+	if InCombatLockdown() then
+		AB.NeedsUpdateMicroPositionDimensions = true
+		self:RegisterEvent("PLAYER_REGEN_ENABLED")
+		return
+	end
+
 	local numRows = 1
 	local prevButton = ElvUI_MicroBar
 	local offset = E:Scale(E.PixelMode and 1 or 3)
@@ -291,10 +296,21 @@ function AB:UpdateMicroPositionDimensions()
 	end
 
 	local style = self.db.microbar.transparentBackdrop and "Transparent" or "Default"
-	if ElvUI_MicroBar.backdrop then
-		ElvUI_MicroBar.backdrop:SetTemplate(style)
-		ElvUI_MicroBar.backdrop:Point("BOTTOMLEFT", 0, 1)
+	ElvUI_MicroBar.backdrop:SetTemplate(style)
+	ElvUI_MicroBar.backdrop:Point("BOTTOMLEFT", 0, 1)
+
+	if AB.db.microbar.backdrop then
+		ElvUI_MicroBar.backdrop:Show()
+	else
+		ElvUI_MicroBar.backdrop:Hide()
 	end
+
+	local visibility = self.db.microbar.visibility
+	if visibility and visibility:match("[\n\r]") then
+		visibility = visibility:gsub("[\n\r]","")
+	end
+
+	RegisterStateDriver(ElvUI_MicroBar, "visibility", (self.db.microbar.enabled and not self.db.microbar.symbolic and visibility) or "hide")
 
 	if ElvUI_MicroBar.mover then
 		if self.db.microbar.enabled then
@@ -305,8 +321,6 @@ function AB:UpdateMicroPositionDimensions()
 	end
 
 	if not Sbuttons[1] then return end
-
-	AB:MenuShow()
 
 	local numRowsS = 1
 	prevButton = ElvUI_MicroBarS
@@ -336,16 +350,12 @@ function AB:UpdateMicroPositionDimensions()
 		ElvUI_MicroBarS:CreateBackdrop()
 	end
 
-	if ElvUI_MicroBarS.backdrop then
-		ElvUI_MicroBarS.backdrop:SetTemplate(style)
-		ElvUI_MicroBarS.backdrop:Point("BOTTOMLEFT", 0, 1)
-	end
+	ElvUI_MicroBarS.backdrop:SetTemplate(style)
+	ElvUI_MicroBarS.backdrop:Point("BOTTOMLEFT", 0, 1)
 
 	if AB.db.microbar.backdrop then
-		ElvUI_MicroBar.backdrop:Show()
 		ElvUI_MicroBarS.backdrop:Show()
 	else
-		ElvUI_MicroBar.backdrop:Hide()
 		ElvUI_MicroBarS.backdrop:Hide()
 	end
 
@@ -355,34 +365,14 @@ function AB:UpdateMicroPositionDimensions()
 		ElvUI_MicroBarS:SetAlpha(AB.db.microbar.alpha)
 	end
 
-	AB:SetSymbloColor()
-end
+	RegisterStateDriver(ElvUI_MicroBarS, "visibility", (self.db.microbar.enabled and self.db.microbar.symbolic and visibility) or "hide")
 
-function AB:MenuShow()
-	if AB.db.microbar.enabled then
-		if AB.db.microbar.symbolic then
-			ElvUI_MicroBar:Hide()
-			ElvUI_MicroBarS:Show()
-			if not AB.db.microbar.mouseover then
-				E:UIFrameFadeIn(ElvUI_MicroBarS, 0.2, ElvUI_MicroBarS:GetAlpha(), AB.db.microbar.alpha)
-			end
-		else
-			ElvUI_MicroBarS:Hide()
-			ElvUI_MicroBar:Show()
-		end
-	else
-		if AB.db.microbar.symbolic then
-			ElvUI_MicroBarS:Hide()
-		else
-			ElvUI_MicroBar:Hide()
-		end
-	end
+	AB:SetSymbloColor()
 end
 
 function AB:EnhancementInit()
 	EP:RegisterPlugin(addon, AB.GetOptions)
 	AB:SetupSymbolBar()
-	AB:MenuShow()
 
 	_G["EMB_MenuSys"]:SetScript("OnUpdate", function(self, elapsed)
 		if self.updateInterval > 0 then
