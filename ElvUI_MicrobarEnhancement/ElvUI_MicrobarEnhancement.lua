@@ -17,9 +17,6 @@ P.actionbar.microbar.transparentBackdrop = false
 P.actionbar.microbar.classColor = false
 P.actionbar.microbar.colorS = {r = 1, g = 1, b = 1}
 
-MicroButtonPortrait:SetDrawLayer("ARTWORK")
-PVPMicroButtonTexture:SetDrawLayer("ARTWORK")
-
 function AB:GetOptions()
 	E.Options.args.actionbar.args.microbar.args.microbarEnhanced = {
 		order = 10,
@@ -124,7 +121,7 @@ function AB:HandleMicroButton(button)
 	button:HookScript("OnLeave", onLeave)
 
 	local text = MICRO_BUTTONS[button:GetName()]
-	button.text = button:CreateFontString(nil, "OVERLAY")
+	button.text = button:CreateFontString(nil, "BORDER")
 	button.text:FontTemplate()
 	button.text:SetPoint("CENTER", button, "CENTER", 0, -1)
 	button.text:SetJustifyH("CENTER")
@@ -147,22 +144,23 @@ function AB:UpdateMicroPositionDimensions()
 	else
 		ElvUI_MicroBar.backdrop:Hide()
 	end
-	
+
 	for button in pairs(MICRO_BUTTONS) do
 		local b = _G[button]
 
 		if AB.db.microbar.symbolic then
 			b:DisableDrawLayer("ARTWORK")
-			b:EnableDrawLayer("OVERLAY")
+			b:DisableDrawLayer("OVERLAY")
+			b:EnableDrawLayer("BORDER")
 		else
 			b:EnableDrawLayer("ARTWORK")
-			b:DisableDrawLayer("OVERLAY")
+			b:EnableDrawLayer("OVERLAY")
+			b:DisableDrawLayer("BORDER")
 		end
 	end
 
 	AB:SetSymbloColor()
 end
-
 
 function AB:EnhancementInit()
 	EP:RegisterPlugin(addon, AB.GetOptions)
